@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trivident-movies", "trivident-movies\trivident-movies.csproj", "{91EAE9A2-4BE5-4E1E-8B5F-8D3E3D6D2B12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trivident-movies.Tests", "trivident-movies.Tests\trivident-movies.Tests.csproj", "{38C601F2-B552-4B07-BE98-62C434966F37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91EAE9A2-4BE5-4E1E-8B5F-8D3E3D6D2B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91EAE9A2-4BE5-4E1E-8B5F-8D3E3D6D2B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91EAE9A2-4BE5-4E1E-8B5F-8D3E3D6D2B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91EAE9A2-4BE5-4E1E-8B5F-8D3E3D6D2B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C601F2-B552-4B07-BE98-62C434966F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C601F2-B552-4B07-BE98-62C434966F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C601F2-B552-4B07-BE98-62C434966F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C601F2-B552-4B07-BE98-62C434966F37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8AC81B35-AA12-4591-950F-68086E35F334}
+	EndGlobalSection
+EndGlobal
