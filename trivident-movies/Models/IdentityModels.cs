@@ -29,5 +29,7 @@ namespace trivident_movies.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<trivident_movies.Models.MovieModel> MovieModels { get; set; }
     }
 }

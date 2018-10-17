@@ -1,0 +1,60 @@
+﻿@model trivident_movies.Models.MovieModel
+
+@{
+    ViewBag.Title = "Movie Details";
+}
+
+<h2>Movie Details</h2>
+
+<div>
+    
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Director)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Director)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Year)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Actors)
+                </dt>
+                <dd>
+                    <ul class="actor_list">
+                        @foreach (var actor in @Model.Actors.Split(','))
+                        {
+                            <li>@actor</li>
+                        }
+                    </ul>
+                </dd>
+                <p>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                    @Html.ActionLink("Back to List", "Index")
+                </p>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <img src="@Model.ImageLink" alt="Cover Image" height="500px"/>             
+        </div>
+    </div>
+</div>
