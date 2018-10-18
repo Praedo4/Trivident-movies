@@ -114,7 +114,8 @@ namespace trivident_movies.Controllers
             {
                 var copyQuery = Query.And(Query.EQ("title", movieModel.Title), Query.EQ("year", movieModel.Year));
                 var queryResults = _dbCollection.FindAs<MovieModel>(copyQuery);
-                if (queryResults.Count() == 0)
+                string foundID = queryResults.First<MovieModel>().Id.ToString();
+                if (queryResults.Count() == 0 || foundID.Equals(id))
                 {
                     var query = Query<MovieModel>.EQ(p => p.Id, ObjectId.Parse(id));
                     movieModel.Id = new ObjectId(id);
@@ -125,7 +126,7 @@ namespace trivident_movies.Controllers
                 {
                     TempData["Message"] = "This movie already exists in the database!";
                     ViewBag.Year = movieModel.Year;
-                    ViewBag.ExistingId = queryResults.First<MovieModel>().Id.ToString();
+                    ViewBag.ExistingId = foundID;
                     return View("Edit", movieModel);
                 }
             }

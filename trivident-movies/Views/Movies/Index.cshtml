@@ -9,56 +9,83 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Image
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Year)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Director)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Actors)
-        </th>
+<div class="d-none d-md-block">
+    <div class="row">
+        <div class="col-md-2 col-sm-6">
+            Cover
+        </div>
+        <div class="col-md-10 col-sm-6">
+            <div class="row">
+                <div class="col-md-3 col-sm-10">
+                    @Html.DisplayNameFor(model => model.Title)
+                </div>
+                <div class="col-md-1 col-sm-10">
+                    @Html.DisplayNameFor(model => model.Year)
+                </div>
+                <div class="col-md-3 col-sm-10">
+                    @Html.DisplayNameFor(model => model.Director)
+                </div>
+                <div class="col-md-4 col-sm-10">
+                    @Html.DisplayNameFor(model => model.Actors)
+                </div>
 
-        <th></th>
-    </tr>
+                <div class="col-md-1 col-sm-10"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src="@item.ImageLink" alt="Cover image" height="200px" />
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Year)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Director)
-        </td>
-        <td>
-            <ul class="actor_list">
-                @foreach (var actor in @item.Actors.Split(','))
-                {
-                    <li>@actor</li>
-                }
-            </ul>
-        </td>
+@foreach (var item in Model)
+{
+    <hr />
+    <div class="row">
+        <div class="col-md-2 col-sm-6 col-xs-6">
+            <img src="@item.ImageLink" alt="Cover image" width="100%" />
+        </div>
+        <div class="col-md-10 col-sm-6 col-xs-6">
+            <div class="row">
+                <div class="col-md-3 col-sm-10 col-xs-10">
+                    <text class="d-md-none d-lg-none d-xl-none">
+                        <b>@Html.DisplayNameFor(model => model.Title):</b>
+                    </text>
+                    @Html.DisplayFor(modelItem => item.Title)
+                    <hr class="d-md-none d-lg-none d-xl-none"/>
+                </div>
+                <div class="col-md-1 col-sm-10 col-xs-10">
+                    <text class="d-md-none d-lg-none d-xl-none">
+                        <b>@Html.DisplayNameFor(model => model.Year):</b>
+                    </text>
+                    @Html.DisplayFor(modelItem => item.Year)
+                    <hr class="d-md-none d-lg-none d-xl-none" />
+                </div>
+                <div class="col-md-3 col-sm-10 col-xs-10">
+                    <text class="d-md-none d-lg-none d-xl-none">
+                        <b>@Html.DisplayNameFor(model => model.Director):</b>
+                    </text>
+                    @Html.DisplayFor(modelItem => item.Director)
+                    <hr class="d-md-none d-lg-none d-xl-none" />
+                </div>
+                <div class="col-md-4 col-sm-10 col-xs-10">
+                    <text class="d-md-none d-lg-none d-xl-none">
+                        <b>@Html.DisplayNameFor(model => model.Actors):</b>
+                    </text>
+                    <ul class="actor_list">
+                        @foreach (var actor in @item.Actors.Split(','))
+                        {
+                            <li>@actor</li>
+                        }
+                    </ul>
+                    <hr class="d-md-none d-lg-none d-xl-none" />
+                </div>
 
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
+                <div class="col-md-1 col-sm-10 col-xs-10">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) 
+                    <br class="d-none d-lg-block d-xl-none" /> <text class="d-md-none d-lg-none d-xl-none">|</text>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) 
+                    <br class="d-none d-lg-block d-xl-none"/> <text class="d-md-none d-lg-none d-xl-none">|</text>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </div>
+            </div>
+        </div>
+    </div>
 }
-
-</table>
