@@ -21,7 +21,7 @@ namespace trivident_movies.Controllers
         
 
         MongoContext _dbContext;
-        MongoCollection<MovieModel> _dbCollection;
+        IMongoCollection<MovieModel> _dbCollection;
         public MoviesController()
         {
             _dbContext = new MongoContext();
@@ -31,7 +31,7 @@ namespace trivident_movies.Controllers
         // GET: Movies
         public async Task<ActionResult> Index()
         {
-            var allMovies = _dbCollection.FindAll().ToList();
+            var allMovies = (await _dbCollection.FindAsync(FilterDefinition<MovieModel>.Empty)).ToList();
 
             return View(allMovies); //  await db.MovieModels.ToListAsync()
         }
@@ -43,7 +43,8 @@ namespace trivident_movies.Controllers
             {
                 return RedirectToAction("Index");
             }
-            MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
+            FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.Eq(m => m.Id,ObjectId.Parse(id));
+            MovieModel movieModel = (await (await _dbCollection.FindAsync<MovieModel>(filter)).FirstOrDefaultAsync()) ;
             if (movieModel == null)
             {
                 return HttpNotFound();
@@ -67,11 +68,11 @@ namespace trivident_movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                var query = Query.And(Query.EQ("title", movieModel.Title), Query.EQ("year", movieModel.Year));
-                var queryResults = _dbCollection.FindAs<MovieModel>(query);
+                FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.And(Builders<MovieModel>.Filter.Eq(m => m.Title, movieModel.Title), Builders<MovieModel>.Filter.Eq(m => m.Year, movieModel.Year));
+                var queryResults = (await _dbCollection.FindAsync<MovieModel>(filter)).ToList();
                 if (queryResults.Count() == 0)
                 {
-                    var result = _dbCollection.Insert(movieModel);
+                    await _dbCollection.InsertOneAsync(movieModel);
                     return RedirectToAction("Index");
                 }
                 else
@@ -93,7 +94,8 @@ namespace trivident_movies.Controllers
             {
                 return RedirectToAction("Index");
             }
-            MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
+            FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.Eq(m => m.Id, ObjectId.Parse(id));
+            MovieModel movieModel = (await (await _dbCollection.FindAsync<MovieModel>(filter)).SingleAsync());
             if (movieModel == null)
             {
                 return HttpNotFound();
@@ -112,14 +114,14 @@ namespace trivident_movies.Controllers
         { 
             if (ModelState.IsValid)
             {
-                var copyQuery = Query.And(Query.EQ("title", movieModel.Title), Query.EQ("year", movieModel.Year));
-                var queryResults = _dbCollection.FindAs<MovieModel>(copyQuery);
+                FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.And(Builders<MovieModel>.Filter.Eq(m => m.Title, movieModel.Title), Builders<MovieModel>.Filter.Eq(m => m.Year, movieModel.Year));
+                var queryResults = (await _dbCollection.FindAsync<MovieModel>(filter)).ToList();
                 string foundID = queryResults.First<MovieModel>().Id.ToString();
                 if (queryResults.Count() == 0 || foundID.Equals(id))
                 {
-                    var query = Query<MovieModel>.EQ(p => p.Id, ObjectId.Parse(id));
+                    FilterDefinition<MovieModel> IDfilter = Builders<MovieModel>.Filter.Eq(m => m.Id, ObjectId.Parse(id));
                     movieModel.Id = new ObjectId(id);
-                    var result = _dbCollection.Update(query, Update.Replace(movieModel), UpdateFlags.None);
+                    await _dbCollection.ReplaceOneAsync(IDfilter, movieModel);
                     return RedirectToAction("Index");
                 }
                 else
@@ -140,7 +142,8 @@ namespace trivident_movies.Controllers
             {
                 return RedirectToAction("Index");
             }
-            MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
+            FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.Eq(m => m.Id, ObjectId.Parse(id));
+            MovieModel movieModel = (await (await _dbCollection.FindAsync(filter)).FirstOrDefaultAsync());
             if (movieModel == null)
             {
                 return HttpNotFound();
@@ -155,8 +158,8 @@ namespace trivident_movies.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            var query = Query<MovieModel>.EQ(p => p.Id, new ObjectId(id));
-            _dbCollection.Remove(query, RemoveFlags.Single);
+            FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.Eq(m => m.Id, ObjectId.Parse(id));
+            await _dbCollection.FindOneAndDeleteAsync(filter);
             return RedirectToAction("Index");
         }
 

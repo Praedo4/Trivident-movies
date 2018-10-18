@@ -10,8 +10,7 @@ namespace trivident_movies.App_Start
     public class MongoContext
     {
         MongoClient _client;
-        MongoServer _server;
-        public MongoDatabase _database;
+        public IMongoDatabase _database;
         public MongoContext()
         {
             // Get credentials from Web.config file
@@ -19,8 +18,7 @@ namespace trivident_movies.App_Start
 
             var con = new MongoUrl(ConfigurationManager.AppSettings["MongoConnectionURL"]);
             _client = new MongoClient(MongoClientSettings.FromUrl(con));
-            _server = _client.GetServer();
-            _database = _server.GetDatabase(MongoDatabaseName);
+            _database = _client.GetDatabase(MongoDatabaseName);
         }
     }
 }
