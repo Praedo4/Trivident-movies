@@ -28,7 +28,7 @@ namespace trivident_movies.Controllers
             _dbCollection = _dbContext._database.GetCollection<MovieModel>("movie");
         }
 
-        // GET: MovieModels
+        // GET: Movies
         public async Task<ActionResult> Index()
         {
             var allMovies = _dbCollection.FindAll().ToList();
@@ -36,12 +36,12 @@ namespace trivident_movies.Controllers
             return View(allMovies); //  await db.MovieModels.ToListAsync()
         }
 
-        // GET: MovieModels/Details/5
+        // GET: Movies/Details/id
         public async Task<ActionResult> Details(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
             if (movieModel == null)
@@ -51,13 +51,14 @@ namespace trivident_movies.Controllers
             return View(movieModel);
         }
 
-        // GET: MovieModels/Create
+        // GET: Movies/Create
         public ActionResult Create()
         {
+            ViewBag.Year = DateTime.Now.Year;
             return View();
         }
 
-        // POST: MovieModels/Create
+        // POST: Movies/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -66,32 +67,43 @@ namespace trivident_movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.MovieModels.Add(movieModel);
-                var result = _dbCollection.Insert(movieModel);
-                //await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var query = Query.And(Query.EQ("title", movieModel.Title), Query.EQ("year", movieModel.Year));
+                var queryResults = _dbCollection.FindAs<MovieModel>(query);
+                if (queryResults.Count() == 0)
+                {
+                    var result = _dbCollection.Insert(movieModel);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["Message"] = "This movie already exists in the database!";
+                    ViewBag.Year = movieModel.Year;
+                    ViewBag.ExistingId = queryResults.First<MovieModel>().Id.ToString();
+                    return View("Create", movieModel);
+                }
             }
 
             return View(movieModel);
         }
 
-        // GET: MovieModels/Edit/5
+        // GET: Movies/Edit/id
         public async Task<ActionResult> Edit(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
-            //MovieModel movieModel = await db.MovieModels.FindAsync(id);
             MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
             if (movieModel == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.MovieTitle = movieModel.Title;
+            ViewBag.ImageLink = movieModel.ImageLink;
             return View(movieModel);
         }
 
-        // POST: MovieModels/Edit/5
+        // POST: Movies/Edit/id
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -100,43 +112,50 @@ namespace trivident_movies.Controllers
         { 
             if (ModelState.IsValid)
             {
-                //db.Entry(movieModel).State = EntityState.Modified;
-                var query = Query<MovieModel>.EQ(p => p.Id, ObjectId.Parse(id));
-                movieModel.Id = new ObjectId(id);
-                var result = _dbCollection.Update(query, Update.Replace(movieModel), UpdateFlags.None);
-                //await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var copyQuery = Query.And(Query.EQ("title", movieModel.Title), Query.EQ("year", movieModel.Year));
+                var queryResults = _dbCollection.FindAs<MovieModel>(copyQuery);
+                if (queryResults.Count() == 0)
+                {
+                    var query = Query<MovieModel>.EQ(p => p.Id, ObjectId.Parse(id));
+                    movieModel.Id = new ObjectId(id);
+                    var result = _dbCollection.Update(query, Update.Replace(movieModel), UpdateFlags.None);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["Message"] = "This movie already exists in the database!";
+                    ViewBag.Year = movieModel.Year;
+                    ViewBag.ExistingId = queryResults.First<MovieModel>().Id.ToString();
+                    return View("Edit", movieModel);
+                }
             }
             return View(movieModel);
         }
 
-        // GET: MovieModels/Delete/5
+        // GET: Movies/Delete/id
         public async Task<ActionResult> Delete(string id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
-            //MovieModel movieModel = await db.MovieModels.FindAsync(id);
             MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
             if (movieModel == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.MovieTitle = movieModel.Title;
+            ViewBag.ImageLink = movieModel.ImageLink;
             return View(movieModel);
         }
 
-        // POST: MovieModels/Delete/5
+        // POST: Movies/Delete/id
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            //MovieModel movieModel = await db.MovieModels.FindAsync(id);
-            //MovieModel movieModel = _dbCollection.FindOneById(ObjectId.Parse(id));
-            //db.MovieModels.Remove(movieModel);
             var query = Query<MovieModel>.EQ(p => p.Id, new ObjectId(id));
             _dbCollection.Remove(query, RemoveFlags.Single);
-            //await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

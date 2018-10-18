@@ -1,56 +1,67 @@
 ﻿@model trivident_movies.Models.MovieModel
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = @ViewBag.MovieTitle + " - Delete" ;
 }
 
-<h2>Delete</h2>
+<h2>Delete @ViewBag.MovieTitle from the database</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this movie?</h3>
 <div>
-    <h4>MovieModel</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Director)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Director)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Director)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Director)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImageLink)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Year)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ImageLink)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Actors)
+                </dt>
+                <dd>
+                    <ul class="actor_list">
+                        @foreach (var actor in @Model.Actors.Split(','))
+                        {
+                            <li>@actor</li>
+                        }
+                    </ul>
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <img src="@Model.ImageLink" alt="Cover Image" height="500px" />
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Year)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </div>
     }
 </div>

@@ -25,6 +25,9 @@ namespace trivident_movies
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/moviePreview").Include(
+                      "~/Scripts/movie-image-preview.js"));
         }
     }
 }
