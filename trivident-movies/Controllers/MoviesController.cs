@@ -116,8 +116,8 @@ namespace trivident_movies.Controllers
             {
                 FilterDefinition<MovieModel> filter = Builders<MovieModel>.Filter.And(Builders<MovieModel>.Filter.Eq(m => m.Title, movieModel.Title), Builders<MovieModel>.Filter.Eq(m => m.Year, movieModel.Year));
                 var queryResults = (await _dbCollection.FindAsync<MovieModel>(filter)).ToList();
-                string foundID = queryResults.First<MovieModel>().Id.ToString();
-                if (queryResults.Count() == 0 || foundID.Equals(id))
+                string foundID;
+                if (queryResults.Count() == 0 || (foundID = queryResults.First<MovieModel>().Id.ToString()).Equals(id))
                 {
                     FilterDefinition<MovieModel> IDfilter = Builders<MovieModel>.Filter.Eq(m => m.Id, ObjectId.Parse(id));
                     movieModel.Id = new ObjectId(id);
